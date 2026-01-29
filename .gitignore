@@ -1,0 +1,27 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Env files with secrets
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# SQLite database files (optional)
+*.sqlite
+*.db
+
+# VS Code / IDE config (optional)
+.vscode/
+.idea/
+
+test_api.py
+reset_db.py

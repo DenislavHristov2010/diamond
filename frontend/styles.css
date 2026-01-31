@@ -1,0 +1,132 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== COLORS ===== */
+:root {
+  --gold: #d4af37;
+  --gold-light: #f5e6a8;
+  --white: #ffffff;
+  --bg: #0b0b0b;
+  --glass: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== BODY ===== */
+body {
+  font-family: "Poppins", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #1a1a1a, var(--bg));
+  color: var(--white);
+  min-height: 100vh;
+  animation: fadeIn 0.8s ease;
+}
+
+/* ===== NAV BAR ===== */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  padding: 1.2rem 2.5rem;
+  background: linear-gradient(
+    to right,
+    rgba(212, 175, 55, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  animation: slideDown 0.7s ease;
+}
+
+/* ===== LINKS ===== */
+.nav-bar a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* underline animation */
+.nav-bar a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transition: width 0.3s ease;
+}
+
+.nav-bar a:hover {
+  color: var(--gold);
+}
+
+.nav-bar a:hover::after {
+  width: 100%;
+}
+
+/* ===== BUTTONS ===== */
+.nav-bar button {
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+/* hover glow */
+.nav-bar button:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+/* click effect */
+.nav-bar button:active {
+  transform: scale(0.95);
+}
+
+/* spacing for buttons */
+.nav-bar a[href="login"] {
+  margin-left: auto;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .nav-bar {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  #btn1 {
+    margin-left: 0;
+  }
+}

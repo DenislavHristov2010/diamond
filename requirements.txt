@@ -8,3 +8,4 @@ passlib==1.7.4
 dotenv
 pydantic[email]
 cryptography
+PyJWT==2.8.0

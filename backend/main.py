@@ -5,7 +5,7 @@ from database import Base, engine
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from routers import auth
-
+from routers import cart
 # Create tables
 Base.metadata.create_all(bind=engine)
 
@@ -28,6 +28,9 @@ app.add_middleware(
 # Include auth router
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 
+# Include cart router
+app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
+
 
 # Serve index.html at the root
 @app.get("/")
@@ -42,3 +45,7 @@ def login_page():
 @app.get("/register")
 def register_page():
     return FileResponse(os.path.join(frontend_path, "register.html"))
+
+@app.get("/cart")
+def cart_page():
+    return FileResponse(os.path.join(frontend_path, "cart.html"))

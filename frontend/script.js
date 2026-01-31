@@ -1,4 +1,6 @@
-// Register Form Handler
+// =======================
+// REGISTER FORM HANDLER
+// =======================
 if (document.getElementById('registerForm')) {
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -29,7 +31,10 @@ if (document.getElementById('registerForm')) {
     });
 }
 
-// Login Form Handler
+
+// =======================
+// LOGIN FORM HANDLER
+// =======================
 if (document.getElementById('loginForm')) {
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -49,14 +54,28 @@ if (document.getElementById('loginForm')) {
             const data = await response.json();
 
             if (response.ok && data.message) {
+                // 🔐 SAVE JWT TOKEN
+                localStorage.setItem("token", data.access_token);
+
                 alert('Login successful! Welcome ' + data.email);
                 window.location.href = '/';
             } else {
                 alert('Login failed: ' + (data.detail || 'Unknown error'));
             }
-
         } catch (error) {
             alert('Error: ' + error.message);
         }
+    });
+}
+
+
+// =======================
+// CART BUTTON NAVIGATION
+// =======================
+const cartBtn = document.getElementById("btn3");
+
+if (cartBtn) {
+    cartBtn.addEventListener("click", () => {
+        window.location.href = "/cart.html";
     });
 }

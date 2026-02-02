@@ -4,93 +4,100 @@
     <meta charset="UTF-8">
     <title>Your Cart</title>
     <link rel="stylesheet" href="/static/styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .cart-item {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-        }
-
-        .empty {
-            color: gray;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 10px 16px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
-
+    <nav class="nav-bar">
+        <div class="nav-left">
+        <a href="index.html">Home</a> |
+        <a href="about.html">About</a> |
+        <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-right">
+            <button id="btn3">Cart</button>
+            <details id="profilMenu" class="profile-menu">
+                <summary>Profile</summary>
+                <div class="dropdown-content">
+                    <button id="btn1">Login</button>
+                    <button id="btn2">Register</button>
+                    <button id="btn4">Logout</button>
+                </div>
+            </details>
+        </div>
+    </nav>
 <h1>🛒 Your Cart</h1>
 
 <div id="cartContainer"></div>
 
-<button onclick="goHome()">⬅ Back to Home</button>
+<button onclick="window.location.href='/'">⬅ Back to Home</button>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
 
-    // 🚫 Not logged in
-    if (!token) {
-        alert("You must be logged in to view your cart.");
-        window.location.href = "/login";
-    }
+    // Select buttons
+    const loginBtn = document.getElementById("btn1");
+    const registerBtn = document.getElementById("btn2");
+    const cartBtn = document.getElementById("btn3");
+    const logoutBtn = document.getElementById("btn4");
 
-    async function loadCart() {
-        try {
-            const response = await fetch("/api/cart", {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            });
+    // Show/hide buttons based on token
+    if (token) {
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+    } else {
+        loginBtn.style.display = "inline-block";
+        registerBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
 
-            const data = await response.json();
-            const container = document.getElementById("cartContainer");
-
-            if (!response.ok) {
-                container.innerHTML = "<p class='empty'>Failed to load cart.</p>";
-                return;
-            }
-
-            if (data.items.length === 0) {
-                container.innerHTML = "<p class='empty'>Your cart is empty.</p>";
-                return;
-            }
-
-            data.items.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "cart-item";
-                div.innerHTML = `
-                    <strong>${item.name}</strong><br>
-                    Price: $${item.price}<br>
-                    Quantity: ${item.quantity}
-                `;
-                container.appendChild(div);
-            });
-
-        } catch (err) {
-            alert("Error loading cart: " + err.message);
+        // redirect if not logged in (for cart page)
+        if (window.location.pathname === "/cart") {
+            window.location.href = "/login";
+            return; // stop further execution
         }
     }
 
-    function goHome() {
+    // Add click events for navigation
+    loginBtn?.addEventListener("click", () => window.location.href = "/login");
+    registerBtn?.addEventListener("click", () => window.location.href = "/register");
+    cartBtn?.addEventListener("click", () => window.location.href = "/cart");
+    logoutBtn?.addEventListener("click", () => {
+        localStorage.removeItem("token");
         window.location.href = "/";
-    }
+    });
 
-    loadCart();
+    // Fetch cart only if we are on the cart page
+    if (window.location.pathname === "/cart" && token) {
+        fetch("/api/cart", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => {
+            if (res.status === 401) {
+                window.location.href = "/login";
+                throw new Error("Unauthorized");
+            }
+            return res.json();
+        })
+        .then(data => {
+            const cartContainer = document.getElementById("cartContainer");
+            if (!cartContainer) return;
+
+            if (data.cart.length === 0) {
+                cartContainer.innerHTML = "<p class='empty'>Your cart is empty</p>";
+                return;
+            }
+
+            cartContainer.innerHTML = "";
+            data.cart.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.textContent = `${item.service_name} - ${item.quantity} pcs - $${item.total_price}`;
+                cartContainer.appendChild(div);
+            });
+        })
+        .catch(err => console.warn(err));
+    }
+});
 </script>
 
 </body>

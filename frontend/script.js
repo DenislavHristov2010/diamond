@@ -1,81 +1,93 @@
-// =======================
-// REGISTER FORM HANDLER
-// =======================
-if (document.getElementById('registerForm')) {
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
 
-        const userData = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value
-        };
+    // =======================
+    // NAVBAR BUTTONS
+    // =======================
+    const loginBtn = document.getElementById("btn1");
+    const registerBtn = document.getElementById("btn2");
+    const logoutBtn = document.getElementById("btn4");
+    const cartBtn = document.getElementById("btn3");
 
-        try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
-            });
+    // Show / hide based on auth
+    if (token) {
+        loginBtn?.style.setProperty("display", "none");
+        registerBtn?.style.setProperty("display", "none");
+        logoutBtn?.style.setProperty("display", "block");
+    } else {
+        loginBtn?.style.setProperty("display", "block");
+        registerBtn?.style.setProperty("display", "block");
+        logoutBtn?.style.setProperty("display", "none");
+    }
 
-            const data = await response.json();
+    // Navigation
+    loginBtn?.addEventListener("click", () => window.location.href = "/login");
+    registerBtn?.addEventListener("click", () => window.location.href = "/register");
+    logoutBtn?.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    });
+    cartBtn?.addEventListener("click", () => window.location.href = "/cart");
 
-            if (response.ok && data.message) {
-                alert('Registration successful! Please login.');
-                window.location.href = '/login';
-            } else {
-                alert('Registration failed: ' + (data.detail || 'Unknown error'));
+    // =======================
+    // LOGIN FORM
+    // =======================
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const loginData = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+            try {
+                const res = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginData)
+                });
+                const data = await res.json();
+                if (res.ok && data.access_token) {
+                    localStorage.setItem("token", data.access_token);
+                    alert("Login successful! Welcome " + data.email);
+                    window.location.href = "/";
+                } else {
+                    alert("Login failed: " + (data.detail || "Unknown error"));
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
             }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
-}
+        });
+    }
 
-
-// =======================
-// LOGIN FORM HANDLER
-// =======================
-if (document.getElementById('loginForm')) {
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const loginData = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value
-        };
-
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(loginData)
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.message) {
-                // 🔐 SAVE JWT TOKEN
-                localStorage.setItem("token", data.access_token);
-
-                alert('Login successful! Welcome ' + data.email);
-                window.location.href = '/';
-            } else {
-                alert('Login failed: ' + (data.detail || 'Unknown error'));
+    // =======================
+    // REGISTER FORM
+    // =======================
+    const registerForm = document.getElementById("registerForm");
+    if (registerForm) {
+        registerForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const userData = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+            try {
+                const res = await fetch("/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(userData)
+                });
+                const data = await res.json();
+                if (res.ok && data.message) {
+                    alert("Registration successful! Please login.");
+                    window.location.href = "/login";
+                } else {
+                    alert("Registration failed: " + (data.detail || "Unknown error"));
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
             }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
-}
+        });
+    }
+});
 
-
-// =======================
-// CART BUTTON NAVIGATION
-// =======================
-const cartBtn = document.getElementById("btn3");
-
-if (cartBtn) {
-    cartBtn.addEventListener("click", () => {
-        window.location.href = "/cart.html";
-    });
-}

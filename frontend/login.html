@@ -7,17 +7,24 @@
 </head>
 <body>
     <nav class="nav-bar">
-        <a href="home.html">Home</a> |
+        <div class="nav-left">
+        <a href="index.html">Home</a> |
         <a href="about.html">About</a> |
         <a href="contact.html">Contact</a>
-        <a href="login">
-            <button id="btn1">Login</button>
-        </a>
-        <a href="register">
-            <button id="btn2">Register</button>
-        </a>
+        </div>
+        <div class="nav-right">
+            <button id="btn3">Cart</button>
+            <details id="profilMenu" class="profile-menu">
+                <summary>Profile</summary>
+                <div class="dropdown-content">
+                    <button id="btn1">Login</button>
+                    <button id="btn2">Register</button>
+                    <button id="btn4">Logout</button>
+                </div>
+            </details>
+        </div>
     </nav>
-    <div>
+<div>
     <h2>Login</h2>
     <form id="loginForm">
         <label for="email">Email:</label>
@@ -26,8 +33,9 @@
         <input type="password" id="password" name="password" required><br><br>
         <input type="submit" value="Login">
     </form>
-    </div>
-    <script src="/static/script.js"></script>
+</div>
+<script src="/static/script.js" defer>
+</script>
 </body>
 
 </html>

@@ -9,15 +9,22 @@
 
 <body>
     <nav class="nav-bar">
-        <a href="home.html">Home</a> |
+        <div class="nav-left">
+        <a href="index.html">Home</a> |
         <a href="about.html">About</a> |
         <a href="contact.html">Contact</a>
-        <a href="login">
-            <button id="btn1">Login</button>
-        </a>
-        <a href="register">
-            <button id="btn2">Register</button>
-        </a>
+        </div>
+        <div class="nav-right">
+            <button id="btn3">Cart</button>
+            <details id="profilMenu" class="profile-menu">
+                <summary>Profile</summary>
+                <div class="dropdown-content">
+                    <button id="btn1">Login</button>
+                    <button id="btn2">Register</button>
+                    <button id="btn4">Logout</button>
+                </div>
+            </details>
+        </div>
     </nav>
     <div>
         <h2>Register</h2>
@@ -29,7 +36,7 @@
             <input type="submit" value="Register">
         </form>
     </div>
-    <script src="/static/script.js"></script>
+    <script src="/static/script.js" defer></script>
 </body>
 
 </html>

@@ -1,11 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from database import Base, engine
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from routers import auth
 from routers import cart
+from dependencies import get_current_user
 # Create tables
 Base.metadata.create_all(bind=engine)
 
@@ -29,8 +30,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 
 # Include cart router
-app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
-
+app.include_router(cart.router, prefix="/api", tags=["cart"])
 
 # Serve index.html at the root
 @app.get("/")

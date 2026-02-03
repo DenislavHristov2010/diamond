@@ -25,3 +25,5 @@ __pycache__/
 
 test_api.py
 reset_db.py
+
+__init__.py

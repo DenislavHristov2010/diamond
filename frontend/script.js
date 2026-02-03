@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
 
-    // =======================
-    // NAVBAR BUTTONS
-    // =======================
+//navbar buttons
     const loginBtn = document.getElementById("btn1");
     const registerBtn = document.getElementById("btn2");
     const logoutBtn = document.getElementById("btn4");
@@ -29,9 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     cartBtn?.addEventListener("click", () => window.location.href = "/cart");
 
-    // =======================
-    // LOGIN FORM
-    // =======================
+//login
     const loginForm = document.getElementById("loginForm");
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
@@ -60,9 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // =======================
-    // REGISTER FORM
-    // =======================
+//register form
     const registerForm = document.getElementById("registerForm");
     if (registerForm) {
         registerForm.addEventListener("submit", async (e) => {

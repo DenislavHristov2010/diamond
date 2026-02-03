@@ -40,6 +40,7 @@ def view_cart(db: Session = Depends(get_db), current_user: User = Depends(get_cu
             "quantity": item.quantity,
             "total_price": float(item.service.service_price) * item.quantity
         })
+    print(cart_details)
     return {"cart": cart_details}
 
 # --- Remove service from cart ---

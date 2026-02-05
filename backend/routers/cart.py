@@ -6,7 +6,7 @@ from database import get_db
 from dependencies import get_current_user
 from datetime import datetime
 
-router = APIRouter(prefix="/api/cart", tags=["Cart"])
+router = APIRouter(prefix="/cart", tags=["Cart"])
 
 # --- Add service to cart ---
 @router.post("/items/{service_id}")

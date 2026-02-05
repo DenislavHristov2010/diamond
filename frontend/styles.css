@@ -155,11 +155,19 @@ body {
 }
 
 .cartTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  border: 1px solid var(--gold);
+  width: 40%;
+  margin: 20px auto;
+  border-collapse: collapse;  /* merges borders nicely */
+  border: 1px solid var(--gold); /* outer border */
 }
+
+.cartTable th,
+.cartTable td {                /* style both header and data cells */
+  border: 1px solid var(--gold);
+  padding: 10px;
+  text-align: center;
+}
+
 
 
 /* ===== ANIMATIONS ===== */

@@ -20,10 +20,10 @@ app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"], #Security
+    allow_credentials=True, #Security
+    allow_methods=["*"], #Security
+    allow_headers=["*"], #Security
 )
 
 # Include auth router

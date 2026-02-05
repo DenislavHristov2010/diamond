@@ -21,11 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Navigation
     loginBtn?.addEventListener("click", () => window.location.href = "/login");
     registerBtn?.addEventListener("click", () => window.location.href = "/register");
+    cartBtn?.addEventListener("click", () => window.location.href = "/cart");
     logoutBtn?.addEventListener("click", () => {
         localStorage.removeItem("token");
         window.location.href = "/";
     });
-    cartBtn?.addEventListener("click", () => window.location.href = "/cart");
 
 //login
     const loginForm = document.getElementById("loginForm");

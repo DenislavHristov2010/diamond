@@ -8,23 +8,7 @@
 </head>
 
 <body>
-    <nav class="nav-bar">
-        <div class="nav-left">
-            <a href="index.html">Home</a> |
-            <a href="about.html">About</a> |
-            <a href="contact.html">Contact</a>
-        </div>
-        <div class="nav-right">
-            <button id="btn3">Cart</button>
-            <details id="profilMenu" class="profile-menu">
-                <summary>Profile</summary>
-                <div class="dropdown-content">
-                    <button id="btn1">Login</button>
-                    <button id="btn2">Register</button>
-                    <button id="btn4">Logout</button>
-                </div>
-            </details>
-        </div>
+    <nav id="nav">
     </nav>
     <h1>🛒 Your Cart</h1>
 
@@ -46,137 +30,11 @@
     </div>
 
     <div class="cart-summary">
-        <h3>Total: $<span id="cartTotalPrice">0.00</span></h3>
-        <button id="checkoutBtn" class="premium-btn">Checkout</button>
+        <button id="checkoutBtn" class="checkoutBtn">Checkout</button>
     </div>
 
-    <button onclick="window.location.href='/'" class="back-btn">⬅ Back to Home</button>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const token = localStorage.getItem("token");
-
-            // Select elements
-            const loginBtn = document.getElementById("btn1");
-            const registerBtn = document.getElementById("btn2");
-            const cartBtn = document.getElementById("btn3");
-            const logoutBtn = document.getElementById("btn4");
-            const cartTableBody = document.getElementById("cartTableBody");
-            const cartTotalPrice = document.getElementById("cartTotalPrice");
-            const checkoutBtn = document.getElementById("checkoutBtn");
-
-            // Show/hide buttons based on token
-            if (token) {
-                if (loginBtn) loginBtn.style.display = "none";
-                if (registerBtn) registerBtn.style.display = "none";
-                if (logoutBtn) logoutBtn.style.display = "inline-block";
-            } else {
-                if (loginBtn) loginBtn.style.display = "inline-block";
-                if (registerBtn) registerBtn.style.display = "inline-block";
-                if (logoutBtn) logoutBtn.style.display = "none";
-
-                // redirect if not logged in (for cart page)
-                if (window.location.pathname.includes("cart")) {
-                    window.location.href = "login.html";
-                    return;
-                }
-            }
-
-            // Navigation
-            loginBtn?.addEventListener("click", () => window.location.href = "login.html");
-            registerBtn?.addEventListener("click", () => window.location.href = "register.html");
-            cartBtn?.addEventListener("click", () => window.location.href = "/cart");
-            logoutBtn?.addEventListener("click", () => {
-                localStorage.removeItem("token");
-                window.location.href = "/";
-            });
-
-            // Fetch cart only if we are on the cart page
-            if (window.location.pathname.includes("cart") && token) {
-                fetchCart();
-            }
-
-            async function fetchCart() {
-                try {
-                    const res = await fetch("/api/cart/", {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-
-                    if (res.status === 401) {
-                        window.location.href = "login.html";
-                        return;
-                    }
-
-                    const data = await res.json();
-                    renderCart(data.cart);
-                } catch (err) {
-                    console.error("Error fetching cart:", err);
-                }
-            }
-
-            function renderCart(cartItems) {
-                cartTableBody.innerHTML = "";
-                let total = 0;
-
-                if (cartItems.length === 0) {
-                    cartTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Your cart is empty</td></tr>';
-                    cartTotalPrice.textContent = "0.00";
-                    return;
-                }
-
-                cartItems.forEach(item => {
-                    total += item.total_price;
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${item.service_name}</td>
-                        <td>${item.quantity}</td>
-                        <td>$${item.service_price.toFixed(2)}</td>
-                        <td>$${item.total_price.toFixed(2)}</td>
-                        <td>
-                            <button onclick="removeItem(${item.cart_id})" class="delete-btn">Remove</button>
-                        </td>
-                    `;
-                    cartTableBody.appendChild(tr);
-                });
-
-                cartTotalPrice.textContent = total.toFixed(2);
-            }
-
-            window.removeItem = async (cartId) => {
-                if (!confirm("Are you sure you want to remove this item?")) return;
-                try {
-                    const res = await fetch(`/api/cart/items/${cartId}`, {
-                        method: "DELETE",
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    if (res.ok) {
-                        fetchCart();
-                    }
-                } catch (err) {
-                    console.error("Error removing item:", err);
-                }
-            };
-
-            checkoutBtn?.addEventListener("click", async () => {
-                try {
-                    const res = await fetch("/api/cart/checkout", {
-                        method: "POST",
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const data = await res.json();
-                    if (res.ok) {
-                        alert(`Order successful! Order ID: ${data.order_id}. Total: $${data.total_price}`);
-                        window.location.href = "index.html";
-                    } else {
-                        alert("Checkout failed: " + data.detail);
-                    }
-                } catch (err) {
-                    console.error("Error during checkout:", err);
-                }
-            });
-        });
-    </script>
-
+    <script src="/static/script.js"></script>
 </body>
 
 </html>

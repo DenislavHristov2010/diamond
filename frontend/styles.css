@@ -17,7 +17,6 @@
 /* ===== BODY ===== */
 body {
   font-family: "Poppins", system-ui, sans-serif;
-  /* background: radial-gradient(circle at top, #1a1a1a, var(--bg)); */
   background: var(--bg);
   color: var(--white);
   min-height: 100vh;
@@ -157,17 +156,50 @@ body {
 .cartTable {
   width: 40%;
   margin: 20px auto;
-  border-collapse: collapse;  /* merges borders nicely */
-  border: 1px solid var(--gold); /* outer border */
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .cartTable th,
-.cartTable td {                /* style both header and data cells */
-  border: 1px solid var(--gold);
+.cartTable td {
   padding: 10px;
   text-align: center;
 }
 
+/* вертикални линии */
+.cartTable th:not(:last-child),
+.cartTable td:not(:last-child) {
+  border-right: 1px solid var(--gold);
+}
+
+/* хоризонтални линии */
+.cartTable thead tr th {
+  border-bottom: 1px solid var(--gold);
+}
+
+.cartTable tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--gold);
+}
+
+.checkoutBtn {
+  display: block;
+  margin: 20px auto;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,  
+    background 0.25s ease,
+    color 0.25s ease;
+}
 
 
 /* ===== ANIMATIONS ===== */
@@ -198,3 +230,5 @@ body {
     margin-left: 0;
   }
 }
+
+

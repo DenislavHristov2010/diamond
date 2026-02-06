@@ -20,10 +20,10 @@ app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], #Security
-    allow_credentials=True, #Security
-    allow_methods=["*"], #Security
-    allow_headers=["*"], #Security
+    allow_origins=["http://127.0.0.1:8000/"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Include auth router
@@ -49,3 +49,7 @@ def register_page():
 @app.get("/cart")
 def cart_page():
     return FileResponse(os.path.join(frontend_path, "cart.html"))
+
+@app.get("/checkout")
+def checkout_page():
+    return FileResponse(os.path.join(frontend_path, "checkout.html"))

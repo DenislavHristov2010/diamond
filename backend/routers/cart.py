@@ -8,6 +8,23 @@ from datetime import datetime
 
 router = APIRouter(prefix="/cart", tags=["Cart"])
 
+# --- Get all services ---
+@router.get("/services")
+def get_services(db: Session = Depends(get_db)):
+    services = db.query(Service).all()
+    services_details = []
+    for service in services:
+        services_details.append({
+            "service_id": service.service_id,
+            "service_name": service.service_name,
+            "service_price": float(service.service_price),
+            "service_length": service.service_length,
+            "service_description": service.service_description,
+            "category": service.category,
+            "favourite": service.favourite
+        })
+    return {"services": services_details}
+
 # --- Add service to cart ---
 @router.post("/items/{service_id}")
 def add_to_cart(service_id: int, quantity: int = 1, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

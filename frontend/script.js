@@ -34,13 +34,80 @@ document.addEventListener("DOMContentLoaded", async () => {
         location.href = "/";
     });
 
+    // 🏠 HOME PAGE - SERVICES DISPLAY
+    if (location.pathname === "/") {
+        const servicesContainer = document.getElementById("servicesContainer");
+        if (servicesContainer) {
+            fetchServices();
+        }
+
+        async function fetchServices() {
+            try {
+                const res = await fetch("/api/cart/services");
+                const data = await res.json();
+                renderServices(data.services || []);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderServices(services) {
+            servicesContainer.innerHTML = "";
+
+            if (!services.length) {
+                servicesContainer.innerHTML =
+                    `<div style="text-align:center; padding: 20px;">No services available</div>`;
+                return;
+            }
+
+            services.forEach(service => {
+                const serviceDiv = document.createElement("div");
+                serviceDiv.className = "service-card";
+                serviceDiv.innerHTML = `
+                    <div class="service-content">
+                        <h3>${service.service_name}</h3>
+                        <div class="service-details">
+                            <div><strong>Price:</strong> $${service.service_price.toFixed(2)}</div>
+                            <div><strong>Duration:</strong> ${service.service_length} mins</div>
+                        </div>
+                        ${token ? `<button class="add-to-cart-btn" onclick="addToCart(${service.service_id})">Add to Cart</button>` : ''}
+                    </div>
+                `;
+                servicesContainer.appendChild(serviceDiv);
+            });
+        }
+    }
+
+    window.addToCart = async (serviceId) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please log in first");
+            location.href = "/login";
+            return;
+        }
+        
+        try {
+            const res = await fetch(`/api/cart/items/${serviceId}?quantity=1`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+                alert("Service added to cart!");
+            } else {
+                alert("Failed to add service to cart");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error adding to cart");
+        }
+    };
+
     // 3️⃣ CART PAGE LOGIC
     if (location.pathname.includes("cart")) {
-        const cartTableBody = document.getElementById("cartTableBody");
-        const cartTotalPrice = document.getElementById("cartTotalPrice");
+        const cartContainer = document.getElementById("cartContainer");
         const checkoutBtn = document.getElementById("checkoutBtn");
 
-        if (token && cartTableBody) {
+        if (token && cartContainer) {
             fetchCart();
         }
 
@@ -57,32 +124,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function renderCart(items) {
-            cartTableBody.innerHTML = "";
+            cartContainer.innerHTML = "";
             let total = 0;
 
             if (!items.length) {
-                cartTableBody.innerHTML =
-                    `<tr><td colspan="5" style="text-align:center;">Your cart is empty</td></tr>`;
-                cartTotalPrice.textContent = "0.00";
+                cartContainer.innerHTML =
+                    `<div style="text-align:center; padding: 20px;">Your cart is empty</div>`;
                 return;
             }
 
             items.forEach(item => {
                 total += item.total_price;
-                cartTableBody.innerHTML += `
-                    <tr>
-                        <td>${item.service_name}</td>
-                        <td>${item.quantity}</td>
-                        <td>$${item.service_price.toFixed(2)}</td>
-                        <td>$${item.total_price.toFixed(2)}</td>
-                        <td>
-                            <button class="delete-btn" onclick="removeItem(${item.cart_id})">Remove</button>
-                        </td>
-                    </tr>
+                const itemDiv = document.createElement("div");
+                itemDiv.className = "cart-item";
+                itemDiv.innerHTML = `
+                    <button class="delete-btn" onclick="removeItem(${item.cart_id})">✕</button>
+                    <div class="item-details">
+                        <div><strong>Service:</strong> ${item.service_name}</div>
+                        <div><strong>Quantity:</strong> ${item.quantity}</div>
+                        <div><strong>Unit Price:</strong> $${item.service_price.toFixed(2)}</div>
+                        <div><strong>Total Price:</strong> $${item.total_price.toFixed(2)}</div>
+                    </div>
                 `;
+                cartContainer.appendChild(itemDiv);
             });
 
-            cartTotalPrice.textContent = total.toFixed(2);
+            // Add total price section
+            const totalDiv = document.createElement("div");
+            totalDiv.className = "cart-total";
+            totalDiv.innerHTML = `<strong>Total: $${total.toFixed(2)}</strong>`;
+            cartContainer.appendChild(totalDiv);
         }
 
         window.removeItem = async (id) => {
